@@ -7,7 +7,6 @@ import semantic from 'semantic-ui-vue'
 import 'semantic-ui-css/semantic.min.css'
 
 Vue.config.productionTip = false;
-
 Vue.use(semantic);
 
 new Vue({
