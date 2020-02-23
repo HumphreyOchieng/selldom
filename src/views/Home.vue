@@ -1,18 +1,30 @@
 <template>
 <div class="home">
 	<nav class="navigation">
-		<a href="" class="link header">Store</a>
-		<a href="" class="link">Cart ( {{cart.length}} )</a>
+		<div href="" class="link header">Store</div>
+		<div class="link" @click="openCart">Cart ({{cart.length}})</div>
 	</nav>
-	<div class="posts">
-		<div class="post" v-for="(post, index) in posts" :key="index" @click="addToCart(index)">
-			<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
-			<div class="content">
-				<div class="title">{{post.title}}</div>
-				<div class="details">
+
+	<div class="panels">
+		<div class="posts">
+			<div class="post" v-for="(post, index) in posts" :key="index" @click="addToCart(index)">
+				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
+				<div class="content">
+					<div class="title">{{post.title}}</div>
+					<div class="details">
+						<div class="price">{{post.price}}</div>
+						<div class="rating">{{post.rating}}</div>	
+					</div>		
+				</div>
+			</div>
+		</div>
+		<div class="cart" :class="isCartVisible ? 'cart__open' : 'cart__closed'">
+			<div class="save" v-for="(post, index) in cart" :key="index">
+				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
+				<div class="content">
+					<div class="title">{{post.title}}</div>
 					<div class="price">{{post.price}}</div>
-					<div class="rating">{{post.rating}}</div>	
-				</div>		
+				</div>
 			</div>
 		</div>
 	</div>
@@ -34,35 +46,76 @@ export default {
 				{title: 'Mugs', price: 'Sh 200', rating: '4.1'},
 				{title: 'Leather Jacket', price: 'Sh 4,000', rating: '4.5'}
 			],
-			cart: []
+			cart: [],
+			isCartVisible: false,
+			classObject: {
+				openCart: 'cart__open',
+				closedCart: 'cart__closed'
+			}
 		}
 	},
 	methods: {
 		addToCart: function (index) {
 			this.cart.push(this.posts[index]);
+		},
+		openCart: function () {
+			this.isCartVisible = !this.isCartVisible;
 		}
 	}
 }
 </script>
 
 <style lang="scss">
+.home {
+	.panels {
+		display: flex;
+		padding-top: 5px;
+		position: relative;
+
+		.cart {
+			border: 1px solid gray;
+			border-radius: 4px;
+			margin-left: 10px;
+			position: absolute;
+			top: 5px;
+			right: 0;
+			background: #fff;
+			width: 400px;
+		}
+
+		.cart__open {
+			height: auto;
+			opacity: 1;
+		}
+		.cart__closed {
+			height: 0;
+			opacity: 0;
+		}
+	}
+}
+
 .navigation {
 	display: flex;
 	padding: 10px 0;
 	border-bottom: 1px solid gray;
 
 	.header {
-		flex: 1;
+		margin-right: auto;
 		font-weight: 500;
 		font-size: 22px;
 	}
 	.link {
 		color: inherit;
+
+		&:hover {
+			cursor: pointer;
+			font-weight: bold;
+		}
 	}
 }
 
 .posts {
-	padding-top: 15px;
+	flex: 1;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	grid-gap: 5px;
@@ -95,6 +148,26 @@ export default {
 	&:hover {
 		cursor: pointer;
 		border: 1px solid black;
+	}
+}
+
+.save {
+	display: flex;
+	padding: 5px;
+	border-bottom: 1px solid gray;
+
+	.image {
+		max-width: 30%;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		padding-left: 10px;
+
+		.title {
+			font-weight: bold;
+		}
 	}
 }
 
