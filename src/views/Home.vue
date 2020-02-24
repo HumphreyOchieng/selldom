@@ -16,7 +16,7 @@
 				<div class="content">
 					<div class="title">{{post.title}}</div>
 					<div class="details">
-						<div class="price">{{post.price}}</div>
+						<div class="price">Sh. {{post.price}}</div>
 						<div class="rating">{{post.rating}}</div>
 					</div>		
 				</div>
@@ -27,11 +27,19 @@
 			<div class="message" v-if="isCartEmpty">
 				Your cart is currently empty.
 			</div>
+			<div class="header">
+				<div class="quantity">
+					<span style="font-weight: bold;">{{cart.length}}</span>
+					<span v-if="cart.length===1"> item</span>
+					<span v-if="cart.length!==1"> items</span>
+				</div>
+				<div class="cost">Total: <span style="font-weight: bold;">Sh. {{totalCostOfCart}}</span></div>
+			</div>
 			<div class="save" v-for="(post, index) in cart" :key="index">
 				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
-				<div class="content">
+				<div class="description">
 					<div class="title">{{post.title}}</div>
-					<div class="price">{{post.price}}</div>
+					<div class="price">Sh. {{post.price}}</div>
 				</div>
 			</div>
 		</div>
@@ -44,8 +52,8 @@
 				/>
 				<sui-modal-description class="modal">
 					<h3 class="title">{{selectedPost.title}}</h3>
-					<p class="price">{{selectedPost.price}}</p>
-					<sui-button primary size="large" @click="addToCart(selectedPost.index)">Add to Cart</sui-button>
+					<p class="price">Sh. {{selectedPost.price}}</p>
+					<sui-button primary @click="addToCart(selectedPost.index)">Add to Cart</sui-button>
 				</sui-modal-description>
 			</sui-modal-content>
 		</sui-modal>
@@ -59,14 +67,14 @@ export default {
 	data() {
 		return {
 			posts: [
-				{title: 'Used Laptop', price: 'Sh 44,000', rating: '3.4'},
-				{title: 'Mountain Bike', price: 'Sh 24,000', rating: '3.8'},
-				{title: 'T-Shirt', price: 'Sh 500', rating: '3.8'},
-				{title: 'Keyboard and Mouse', price: 'Sh 1,000', rating: '4.3'},
-				{title: 'Desk', price: 'Sh 14,000', rating: '4.0'},
-				{title: 'Blankets', price: 'Sh 800', rating: '3.6'},
-				{title: 'Mugs', price: 'Sh 200', rating: '4.1'},
-				{title: 'Leather Jacket', price: 'Sh 4,000', rating: '4.5'}
+				{title: 'Used Laptop', price: '44000', rating: '3.4'},
+				{title: 'Mountain Bike', price: '24000', rating: '3.8'},
+				{title: 'T-Shirt', price: '500', rating: '3.8'},
+				{title: 'Keyboard and Mouse', price: '1000', rating: '4.3'},
+				{title: 'Desk', price: '14000', rating: '4.0'},
+				{title: 'Blankets', price: '800', rating: '3.6'},
+				{title: 'Mugs', price: '200', rating: '4.1'},
+				{title: 'Leather Jacket', price: '4000', rating: '4.5'}
 			],
 			cart: [],
 			isCartVisible: false,
@@ -81,6 +89,12 @@ export default {
 	computed: {
 		isCartEmpty: function () {
 			return this.cart.length===0;
+		},
+		totalCostOfCart: function () {
+			let initialCost = 0;
+			return this.cart.reduce((accumulator, currentValue) => {
+				return accumulator + parseInt(currentValue.price);
+			}, initialCost);
 		}
 	},
 	methods: {
@@ -115,6 +129,12 @@ export default {
 			background: #fff;
 			width: 400px;
 
+			.header {
+				display: flex;
+				justify-content: space-between;
+				padding: 10px 5px;
+			}
+
 			.message {
 				text-align: center;
 				padding: 2em;
@@ -123,11 +143,10 @@ export default {
 
 		.cart__open {
 			height: auto;
-			opacity: 1;
 		}
 		.cart__closed {
 			height: 0;
-			opacity: 0;
+			display: none;
 		}
 	}
 }
@@ -184,19 +203,24 @@ export default {
 .save {
 	display: flex;
 	padding: 5px;
-	border-bottom: 1px solid gray;
+	border-top: 1px solid gray;
 
 	.image {
 		max-width: 30%;
 	}
 
-	.content {
+	.description {
+		flex: 1;
 		display: flex;
 		flex-direction: column;
 		padding-left: 10px;
 
 		.title {
 			font-weight: bold;
+			padding-bottom: 5px;
+		}
+		.price {
+			margin-bottom: auto;
 		}
 	}
 }
