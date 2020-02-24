@@ -2,13 +2,16 @@
 <div class="home">
 	<nav class="navigation">
 		<div href="" class="link header">Selldom</div>
-		<sui-button @click="openCart">Cart ({{cart.length}})</sui-button>
+		<sui-button @click="viewCart">
+			<span v-show="isCartVisible">Close</span>
+			<span v-show="!isCartVisible">Cart ({{cart.length}})</span>
+		</sui-button>
 	</nav>
 
 	<div class="panels">
 
 		<div class="posts">
-			<div class="post" v-for="(post, index) in posts" :key="index" @click="viewProductDetails(index)">
+			<div class="post" v-for="(post, index) in posts" :key="index" @click="viewProductModal(index)">
 				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
 				<div class="content">
 					<div class="title">{{post.title}}</div>
@@ -32,6 +35,20 @@
 				</div>
 			</div>
 		</div>
+
+		<sui-modal v-model="isProductModalVisible">
+			<sui-modal-content image>
+				<sui-image
+					size="large"
+					src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image"
+				/>
+				<sui-modal-description class="modal">
+					<h3 class="title">{{selectedPost.title}}</h3>
+					<p class="price">{{selectedPost.price}}</p>
+					<sui-button primary size="large" @click="addToCart(selectedPost.index)">Add to Cart</sui-button>
+				</sui-modal-description>
+			</sui-modal-content>
+		</sui-modal>
 	</div>
 </div>
 </template>
@@ -53,6 +70,8 @@ export default {
 			],
 			cart: [],
 			isCartVisible: false,
+			isProductModalVisible: false,
+			selectedPost: {},
 			classObject: {
 				openCart: 'cart__open',
 				closedCart: 'cart__closed'
@@ -68,11 +87,13 @@ export default {
 		addToCart: function (index) {
 			this.cart.push(this.posts[index]);
 		},
-		openCart: function () {
+		viewCart: function () {
 			this.isCartVisible = !this.isCartVisible;
 		},
-		viewProductDetails: function (index) {
-			alert("open product: " + index);
+		viewProductModal: function (index) {
+			this.isProductModalVisible = !this.isProductModalVisible;
+			this.selectedPost = this.posts[index];
+			this.selectedPost.index = index;
 		}
 	}
 }
@@ -180,5 +201,10 @@ export default {
 	}
 }
 
+.modal {
+	font-size: 18px;
+	display: flex;
+	flex-direction: column;
+}
 
 </style>
