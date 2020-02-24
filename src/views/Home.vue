@@ -1,24 +1,29 @@
 <template>
 <div class="home">
 	<nav class="navigation">
-		<div href="" class="link header">Store</div>
-		<div class="link" @click="openCart">Cart ({{cart.length}})</div>
+		<div href="" class="link header">Selldom</div>
+		<sui-button @click="openCart">Cart ({{cart.length}})</sui-button>
 	</nav>
 
 	<div class="panels">
+
 		<div class="posts">
-			<div class="post" v-for="(post, index) in posts" :key="index" @click="addToCart(index)">
+			<div class="post" v-for="(post, index) in posts" :key="index" @click="viewProductDetails(index)">
 				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
 				<div class="content">
 					<div class="title">{{post.title}}</div>
 					<div class="details">
 						<div class="price">{{post.price}}</div>
-						<div class="rating">{{post.rating}}</div>	
+						<div class="rating">{{post.rating}}</div>
 					</div>		
 				</div>
 			</div>
 		</div>
+
 		<div class="cart" :class="isCartVisible ? 'cart__open' : 'cart__closed'">
+			<div class="message" v-if="isCartEmpty">
+				Your cart is currently empty.
+			</div>
 			<div class="save" v-for="(post, index) in cart" :key="index">
 				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
 				<div class="content">
@@ -54,12 +59,20 @@ export default {
 			}
 		}
 	},
+	computed: {
+		isCartEmpty: function () {
+			return this.cart.length===0;
+		}
+	},
 	methods: {
 		addToCart: function (index) {
 			this.cart.push(this.posts[index]);
 		},
 		openCart: function () {
 			this.isCartVisible = !this.isCartVisible;
+		},
+		viewProductDetails: function (index) {
+			alert("open product: " + index);
 		}
 	}
 }
@@ -68,19 +81,23 @@ export default {
 <style lang="scss">
 .home {
 	.panels {
-		display: flex;
 		padding-top: 5px;
 		position: relative;
 
 		.cart {
 			border: 1px solid gray;
-			border-radius: 4px;
+			border-radius: 3px;
 			margin-left: 10px;
 			position: absolute;
 			top: 5px;
 			right: 0;
 			background: #fff;
 			width: 400px;
+
+			.message {
+				text-align: center;
+				padding: 2em;
+			}
 		}
 
 		.cart__open {
@@ -97,25 +114,16 @@ export default {
 .navigation {
 	display: flex;
 	padding: 10px 0;
-	border-bottom: 1px solid gray;
 
 	.header {
 		margin-right: auto;
 		font-weight: 500;
-		font-size: 22px;
-	}
-	.link {
-		color: inherit;
-
-		&:hover {
-			cursor: pointer;
-			font-weight: bold;
-		}
+		font-size: 26px;
+		align-self: center;
 	}
 }
 
 .posts {
-	flex: 1;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	grid-gap: 5px;
@@ -123,6 +131,7 @@ export default {
 
 .post {
 	border: 1px solid gray;
+	border-radius: 3px;
 
 	.image {
 		max-width: 100%;
