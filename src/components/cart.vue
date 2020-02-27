@@ -1,11 +1,15 @@
 <template>
 <div class="cart" :class="isCartVisible ? 'cart__open' : 'cart__closed'">
 
-	<sui-message>
-		<p>Browse products and add them to your cart to proceed to checkout.</p>
-	</sui-message>
+	<!-- Message displayed when cart is empty -->
+	<template v-if="isCartEmpty">
+		<sui-message>
+			<p>Browse products and add them to your cart to proceed to checkout.</p>
+		</sui-message>
+	</template>
 
-	<template v-if="cart.length>0">
+	<template v-if="!isCartEmpty">
+		<!-- Header displays total number of items and total cost -->
 		<div class="header">
 			<div class="quantity">
 				<span v-if="cart.length===1" style="color:gray">Item: </span>
@@ -14,10 +18,11 @@
 			</div>
 			<div class="cost">
 				<span style="color:gray">Total: </span>
-				<span style="font-weight:bold;color:#38f;">Sh. {{totalCostOfCart}}</span>
+				<span style="font-weight:bold;color:#38f;">Sh. {{totalCost}}</span>
 			</div>
 		</div>
-
+		
+		<!-- List of items saved to cart -->
 		<div class="post" v-for="(post, index) in cart" :key="index">
 			<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
 			<div class="description">
@@ -26,12 +31,9 @@
 			</div>
 		</div>
 
+		<!-- Group of buttons used to proceed to checkout or continue shopping -->
 		<div class="actions">
-			<sui-button-group>
-				<sui-button>Continue shopping</sui-button>
-				<sui-button-or />
-				<sui-button primary>Proceed to checkout</sui-button>
-			</sui-button-group>
+			<sui-button primary fluid large>Proceed to Checkout</sui-button>
 		</div>
 	</template>
 </div>
@@ -42,10 +44,19 @@ export default {
 	name: "Cart",
 	props: [
 		'isCartVisible',
-		'isCartEmpty',
-		'totalCostOfCart',
 		'cart'
-	]
+	],
+	computed: {
+		totalCost: function () {
+			let initialCost = 0;
+			return this.cart.reduce((accumulator, currentValue) => {
+				return accumulator + parseInt(currentValue.price);
+			}, initialCost);
+		},
+		isCartEmpty: function () {
+			return this.cart.length===0;
+		}
+	}
 }
 </script>
 

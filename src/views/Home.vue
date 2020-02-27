@@ -26,8 +26,6 @@
 		<cart
 			:cart="this.cart"
 			:isCartVisible="this.isCartVisible"
-			:isCartEmpty="this.isCartEmpty"
-			:totalCostOfCart="this.totalCostOfCart"
 		></cart>
 
 		<sui-modal v-model="isProductModalVisible">
@@ -69,11 +67,7 @@ export default {
 			cart: [],
 			isCartVisible: false,
 			isProductModalVisible: false,
-			selectedPost: {},
-			classObject: {
-				openCart: 'cart__open',
-				closedCart: 'cart__closed'
-			}
+			selectedPost: {}
 		}
 	},
 	computed: {
