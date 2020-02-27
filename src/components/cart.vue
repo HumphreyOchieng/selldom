@@ -1,33 +1,39 @@
 <template>
 <div class="cart" :class="isCartVisible ? 'cart__open' : 'cart__closed'">
 
-	<div class="message" v-if="isCartEmpty">
-		Your cart is currently empty.
-	</div>
+	<sui-message>
+		<p>Browse products and add them to your cart to proceed to checkout.</p>
+	</sui-message>
 
-	<div class="header">
-		<div class="quantity">
-			<span v-if="cart.length===1" style="color:gray">Item: </span>
-			<span v-if="cart.length!==1" style="color:gray">Items: </span>
-			<span style="font-weight: bold;color:#38f;">{{cart.length}}</span>
+	<template v-if="cart.length>0">
+		<div class="header">
+			<div class="quantity">
+				<span v-if="cart.length===1" style="color:gray">Item: </span>
+				<span v-if="cart.length!==1" style="color:gray">Items: </span>
+				<span style="font-weight: bold;color:#38f;">{{cart.length}}</span>
+			</div>
+			<div class="cost">
+				<span style="color:gray">Total: </span>
+				<span style="font-weight:bold;color:#38f;">Sh. {{totalCostOfCart}}</span>
+			</div>
 		</div>
-		<div class="cost">
-			<span style="color:gray">Total: </span>
-			<span style="font-weight:bold;color:#38f;">Sh. {{totalCostOfCart}}</span>
-		</div>
-	</div>
 
-	<div class="post" v-for="(post, index) in cart" :key="index">
-		<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
-		<div class="description">
-			<div class="title">{{post.title}}</div>
-			<div class="price">Sh. {{post.price}}</div>
+		<div class="post" v-for="(post, index) in cart" :key="index">
+			<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
+			<div class="description">
+				<div class="title">{{post.title}}</div>
+				<div class="price">Sh. {{post.price}}</div>
+			</div>
 		</div>
-	</div>
 
-	<div class="checkout">
-		<sui-button primary fluid large>Checkout</sui-button>
-	</div>
+		<div class="actions">
+			<sui-button-group>
+				<sui-button>Continue shopping</sui-button>
+				<sui-button-or />
+				<sui-button primary>Proceed to checkout</sui-button>
+			</sui-button-group>
+		</div>
+	</template>
 </div>
 </template>
 
@@ -63,11 +69,6 @@ export default {
 		border-bottom: 1px solid gray;
 	}
 
-	.message {
-		text-align: center;
-		padding: 2em;
-	}
-
 	.post {
 		display: flex;
 		padding: 5px;
@@ -88,12 +89,13 @@ export default {
 			}
 			.price {
 				margin-bottom: auto;
+				font-size: 16px;
 			}
 		}
 	}
 
-	.checkout {
-		margin-top: 5px;
+	.actions {
+		margin: 5px 0;
 		padding: 0 5px;
 	}
 }
