@@ -9,19 +9,10 @@
 	</nav>
 
 	<div class="panels">
-
-		<div class="posts">
-			<div class="post" v-for="(post, index) in posts" :key="index" @click="viewProductModal(index)">
-				<img src="http://dummyimage.com/800x600/4d494d/686a82.gif&text=placeholder+image" alt="placeholder+image" class="image">
-				<div class="content">
-					<div class="title">{{post.title}}</div>
-					<div class="details">
-						<div class="price">Sh. {{post.price}}</div>
-						<div class="rating">{{post.rating}}</div>
-					</div>		
-				</div>
-			</div>
-		</div>
+		<product-grid
+			:posts = "posts"
+			@product-click="openProductModal"
+		></product-grid>
 
 		<cart
 			:cart="this.cart"
@@ -47,10 +38,12 @@
 
 <script>
 import Cart from "@/components/cart";
+import ProductGrid from "@/components/product-grid";
+
 export default {
 	name: 'Home',
 	components: {
-		Cart
+		Cart, ProductGrid
 	},
 	data() {
 		return {
@@ -70,17 +63,6 @@ export default {
 			selectedPost: {}
 		}
 	},
-	computed: {
-		isCartEmpty: function () {
-			return this.cart.length===0;
-		},
-		totalCostOfCart: function () {
-			let initialCost = 0;
-			return this.cart.reduce((accumulator, currentValue) => {
-				return accumulator + parseInt(currentValue.price);
-			}, initialCost);
-		}
-	},
 	methods: {
 		addToCart: function (index) {
 			this.cart.push(this.posts[index]);
@@ -88,7 +70,7 @@ export default {
 		viewCart: function () {
 			this.isCartVisible = !this.isCartVisible;
 		},
-		viewProductModal: function (index) {
+		openProductModal: function (index) {
 			this.isProductModalVisible = !this.isProductModalVisible;
 			this.selectedPost = this.posts[index];
 			this.selectedPost.index = index;
@@ -113,43 +95,6 @@ export default {
 .panels {
 	padding-top: 5px;
 	position: relative;
-}
-
-.posts {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	grid-gap: 5px;
-
-	.post {
-		border: 1px solid gray;
-		border-radius: 3px;
-
-		.image {
-			max-width: 100%;
-		}
-
-		.content {
-			padding: 5px;
-
-			.title {
-				font-weight: bold;
-			}
-
-			.details {
-				display: flex;
-				padding-top: 5px;
-
-				.price {
-					flex: 1;
-				}
-			}
-		}
-
-		&:hover {
-			cursor: pointer;
-			border: 1px solid black;
-		}
-	}
 }
 
 .modal {
